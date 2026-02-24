@@ -1,0 +1,45 @@
+Phase 1: The Core (Done ✅)
+Initialize Node/Express
+
+Setup .env and server.js
+
+Test: Run nodemon server.js. If you see "Server Online," we move on.
+
+Phase 2: Data Blueprint (Next Step 🔜)
+Build config/db.js: Connect to MongoDB.
+
+Build models/User.js: Define what a user is.
+
+Test: Verify server console says "MongoDB Connected."
+
+Phase 3: Identity & Security
+Build controllers/authController.js: Write the "Register" logic.
+
+Build routes/authRoutes.js: Link the URL to the logic.
+
+Test: Use a tool (like Postman/Thunder Client) to send a user to the DB. Check MongoDB to see if they appeared.
+
+Phase 4: Mission Logic
+Build models/Job.js
+
+Build controllers/jobController.js (The CRUD functions).
+
+Build routes/jobRoutes.js
+
+Test: Try to "Post" a job and "Get" all jobs via API.
+
+Phase 5: The Lock (Authorization)
+Build middleware/authMiddleware.js.
+
+Apply to Job Routes: Ensure only logged-in users can see jobs.
+
+Test: Try to get jobs without a token. It should say "Access Denied."
+
+🚦 Testing Checklist for each Step
+Before telling me "Next," always check:
+
+[ ] Does the terminal show any Red Errors?
+
+[ ] Did I save all files?
+
+[ ] Is the MongoDB Atlas IP Whitelist set to "Allow Access from Anywhere"?

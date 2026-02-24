@@ -1,0 +1,1593 @@
+first we are going with src folder which are consite of 10 folders iam going to provide you these folders as they are showing in vs code of 1st folder is api which is empty 2nd is assest which has a file react.svg then there is 3rd folder name components which has 2 files and one folders files are navbar.jsximport React, { useState, useEffect } from 'react';
+
+import { useNavigate } from 'react-router-dom';
+
+import styled from 'styled-components';
+
+
+
+const NavbarContainer = styled.nav`
+
+  position: sticky;
+
+  top: 0;
+
+  left: ${props => props.sidebarOpen ? '280px' : '80px'};
+
+  width: calc(100% - ${props => props.sidebarOpen ? '280px' : '80px'});
+
+  background: rgba(15, 35, 80, 0.3);
+
+  backdrop-filter: blur(10px);
+
+  -webkit-backdrop-filter: blur(10px);
+
+  border-bottom: 1px solid rgba(77, 166, 255, 0.25);
+
+  padding: 1rem 2rem;
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  z-index: 1000;
+
+  transition: all 0.3s ease;
+
+  
+
+  @media (max-width: 768px) {
+
+    left: 0;
+
+    width: 100%;
+
+  }
+
+`;
+
+
+
+const LeftSection = styled.div`
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 1.5rem;
+
+`;
+
+
+
+const SearchContainer = styled.div`
+
+  position: relative;
+
+  
+
+  input {
+
+    background: rgba(20, 45, 100, 0.4);
+
+    border: 1px solid rgba(77, 166, 255, 0.3);
+
+    border-radius: 12px;
+
+    padding: 0.75rem 1rem 0.75rem 2.5rem;
+
+    color: #e6f0ff;
+
+    width: 300px;
+
+    font-size: 0.9rem;
+
+    transition: all 0.3s ease;
+
+    
+
+    &::placeholder {
+
+      color: rgba(180, 215, 255, 0.6);
+
+    }
+
+    
+
+    &:focus {
+
+      outline: none;
+
+      border-color: #4da6ff;
+
+      box-shadow: 0 0 0 3px rgba(77, 166, 255, 0.2);
+
+      width: 350px;
+
+    }
+
+  }
+
+  
+
+  svg {
+
+    position: absolute;
+
+    left: 1rem;
+
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    color: rgba(180, 215, 255, 0.7);
+
+    width: 16px;
+
+    height: 16px;
+
+  }
+
+  
+
+  @media (max-width: 768px) {
+
+    display: none;
+
+  }
+
+`;
+
+
+
+const RightSection = styled.div`
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 1rem;
+
+`;
+
+
+
+const NavButton = styled.button`
+
+  background: none;
+
+  border: none;
+
+  color: #a0c8ff;
+
+  cursor: pointer;
+
+  padding: 0.5rem;
+
+  border-radius: 8px;
+
+  transition: all 0.3s ease;
+
+  position: relative;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  
+
+  &:hover {
+
+    background: rgba(77, 166, 255, 0.1);
+
+    color: #4da6ff;
+
+  }
+
+  
+
+  svg {
+
+    width: 20px;
+
+    height: 20px;
+
+  }
+
+`;
+
+
+
+const NotificationBadge = styled.span`
+
+  position: absolute;
+
+  top: -4px;
+
+  right: -4px;
+
+  background: #ff4d4d;
+
+  color: white;
+
+  font-size: 0.65rem;
+
+  width: 18px;
+
+  height: 18px;
+
+  border-radius: 50%;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  font-weight: 600;
+
+  box-shadow: 0 0 10px rgba(255, 77, 77, 0.5);
+
+`;
+
+
+
+const UserMenu = styled.div`
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 0.75rem;
+
+  cursor: pointer;
+
+  padding: 0.5rem;
+
+  border-radius: 8px;
+
+  transition: all 0.3s ease;
+
+  
+
+  &:hover {
+
+    background: rgba(77, 166, 255, 0.1);
+
+  }
+
+`;
+
+
+
+const UserProfile = styled.div`
+
+  width: 36px;
+
+  height: 36px;
+
+  border-radius: 50%;
+
+  background: linear-gradient(135deg, #4da6ff, #2a75b8);
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  font-weight: 700;
+
+  color: #0a0e17;
+
+  font-size: 0.9rem;
+
+  flex-shrink: 0;
+
+`;
+
+
+
+const UserInfo = styled.div`
+
+  display: flex;
+
+  flex-direction: column;
+
+  text-align: left;
+
+  
+
+  span:first-child {
+
+    font-weight: 600;
+
+    font-size: 0.9rem;
+
+    color: #e6f0ff;
+
+  }
+
+  
+
+  span:last-child {
+
+    font-size: 0.75rem;
+
+    color: #a0c8ff;
+
+  }
+
+  
+
+  @media (max-width: 768px) {
+
+    display: none;
+
+  }
+
+`;
+
+
+
+const MobileMenuButton = styled.button`
+
+  display: none;
+
+  background: none;
+
+  border: none;
+
+  color: #e6f0ff;
+
+  font-size: 1.5rem;
+
+  cursor: pointer;
+
+  padding: 0.5rem;
+
+  
+
+  @media (max-width: 768px) {
+
+    display: block;
+
+  }
+
+`;
+
+
+
+export default function Navbar({ sidebarOpen }) {
+
+  const [notifications, setNotifications] = useState(3);
+
+  const [userEmail, setUserEmail] = useState('');
+
+  const navigate = useNavigate();
+
+
+
+  useEffect(() => {
+
+    const email = localStorage.getItem("userEmail");
+
+    setUserEmail(email || '');
+
+  }, []);
+
+
+
+  const handleLogout = () => {
+
+    localStorage.removeItem("isLoggedIn");
+
+    localStorage.removeItem("userEmail");
+
+    localStorage.removeItem("rememberMe");
+
+    navigate('/login');
+
+  };
+
+
+
+  return (
+
+    <NavbarContainer sidebarOpen={sidebarOpen}>
+
+      <LeftSection>
+
+        <SearchContainer>
+
+          <span>🔍</span>
+
+          <input type="text" placeholder="Search..." />
+
+        </SearchContainer>
+
+      </LeftSection>
+
+      
+
+      <RightSection>
+
+        <NavButton title="Notifications">
+
+          <span>🔔</span>
+
+          {notifications > 0 && <NotificationBadge>{notifications}</NotificationBadge>}
+
+        </NavButton>
+
+        
+
+        <NavButton title="Messages">
+
+          <span>💬</span>
+
+        </NavButton>
+
+        
+
+        <NavButton title="Settings" onClick={() => navigate('/settings')}>
+
+          <span>⚙️</span>
+
+        </NavButton>
+
+        
+
+        <UserMenu onClick={handleLogout}>
+
+          <UserProfile>
+
+            {userEmail ? userEmail.charAt(0).toUpperCase() : 'U'}
+
+          </UserProfile>
+
+          <UserInfo>
+
+            <span>{userEmail || 'User'}</span>
+
+            <span>Click to logout</span>
+
+          </UserInfo>
+
+        </UserMenu>
+
+        
+
+        <MobileMenuButton>
+
+          ☰
+
+        </MobileMenuButton>
+
+      </RightSection>
+
+    </NavbarContainer>
+
+  );
+
+} thats the code for navbar.jsx and other file is Sidevar.jsx and its code is import React, { useState } from 'react';
+
+import { NavLink, useNavigate } from 'react-router-dom';
+
+import styled from 'styled-components';
+
+
+
+const SidebarContainer = styled.aside`
+
+  position: fixed;
+
+  left: 0;
+
+  top: 0;
+
+  height: 100vh;
+
+  width: ${props => props.sidebarOpen ? '280px' : '80px'};
+
+  background: rgba(15, 35, 80, 0.4);
+
+  backdrop-filter: blur(12px);
+
+  -webkit-backdrop-filter: blur(12px);
+
+  border-right: 1px solid rgba(77, 166, 255, 0.25);
+
+  transition: all 0.3s ease;
+
+  z-index: 1000;
+
+  overflow: hidden;
+
+  display: flex;
+
+  flex-direction: column;
+
+  
+
+  @media (max-width: 768px) {
+
+    transform: ${props => props.sidebarOpen ? 'translateX(0)' : 'translateX(-100%)'};
+
+    width: 280px;
+
+  }
+
+`;
+
+
+
+const LogoSection = styled.div`
+
+  padding: 1.5rem;
+
+  border-bottom: 1px solid rgba(77, 166, 255, 0.2);
+
+  display: flex;
+
+  align-items: center;
+
+  gap: ${props => props.sidebarOpen ? '1rem' : '0'};
+
+  height: 70px;
+
+  overflow: hidden;
+
+`;
+
+
+
+const Logo = styled.div`
+
+  font-family: 'Montserrat', sans-serif;
+
+  font-size: ${props => props.sidebarOpen ? '1.5rem' : '1.2rem'};
+
+  font-weight: 800;
+
+  background: linear-gradient(to right, #4da6ff, #a0c8ff);
+
+  -webkit-background-clip: text;
+
+  -webkit-text-fill-color: transparent;
+
+  background-clip: text;
+
+  white-space: nowrap;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 0.5rem;
+
+  
+
+  span:first-child {
+
+    font-size: ${props => props.sidebarOpen ? '1.8rem' : '1.5rem'};
+
+  }
+
+`;
+
+
+
+const ToggleButton = styled.button`
+
+  position: absolute;
+
+  right: -12px;
+
+  top: 50%;
+
+  transform: translateY(-50%);
+
+  width: 24px;
+
+  height: 40px;
+
+  background: rgba(77, 166, 255, 0.3);
+
+  border: 1px solid rgba(77, 166, 255, 0.3);
+
+  border-radius: 0 8px 8px 0;
+
+  color: #4da6ff;
+
+  cursor: pointer;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  transition: all 0.3s ease;
+
+  z-index: 1001;
+
+  
+
+  &:hover {
+
+    background: rgba(77, 166, 255, 0.5);
+
+    transform: translateY(-50%) translateX(2px);
+
+  }
+
+  
+
+  @media (max-width: 768px) {
+
+    display: none;
+
+  }
+
+`;
+
+
+
+const NavMenu = styled.nav`
+
+  flex: 1;
+
+  padding: 1rem 0;
+
+  overflow-y: auto;
+
+  
+
+  &::-webkit-scrollbar {
+
+    width: 4px;
+
+  }
+
+  
+
+  &::-webkit-scrollbar-thumb {
+
+    background: rgba(77, 166, 255, 0.3);
+
+    border-radius: 2px;
+
+  }
+
+`;
+
+
+
+const NavItem = styled(NavLink)`
+
+  display: flex;
+
+  align-items: center;
+
+  padding: ${props => props.sidebarOpen ? '1rem 1.5rem' : '1rem'};
+
+  color: #a0c8ff;
+
+  text-decoration: none;
+
+  transition: all 0.3s ease;
+
+  gap: ${props => props.sidebarOpen ? '1rem' : '0'};
+
+  position: relative;
+
+  margin: 0.25rem 0;
+
+  
+
+  &:hover {
+
+    background: rgba(77, 166, 255, 0.1);
+
+    color: #4da6ff;
+
+    transform: translateX(${props => props.sidebarOpen ? '4px' : '0'});
+
+  }
+
+  
+
+  &.active {
+
+    background: rgba(77, 166, 255, 0.15);
+
+    color: #4da6ff;
+
+    border-left: 4px solid #4da6ff;
+
+    
+
+    &::before {
+
+      content: '';
+
+      position: absolute;
+
+      left: 0;
+
+      top: 0;
+
+      bottom: 0;
+
+      width: 4px;
+
+      background: #4da6ff;
+
+    }
+
+  }
+
+  
+
+  span {
+
+    white-space: ${props => props.sidebarOpen ? 'normal' : 'nowrap'};
+
+    overflow: hidden;
+
+    transition: opacity 0.3s ease;
+
+    opacity: ${props => props.sidebarOpen ? '1' : '0'};
+
+  }
+
+  
+
+  @media (max-width: 768px) {
+
+    padding: 1rem 1.5rem;
+
+    gap: 1rem;
+
+    
+
+    span {
+
+      opacity: 1;
+
+      white-space: normal;
+
+    }
+
+  }
+
+`;
+
+
+
+const NavIcon = styled.span`
+
+  font-size: 1.25rem;
+
+  min-width: 24px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+`;
+
+
+
+const FooterSection = styled.div`
+
+  padding: 1.5rem;
+
+  border-top: 1px solid rgba(77, 166, 255, 0.2);
+
+  text-align: center;
+
+  font-size: 0.75rem;
+
+  color: rgba(160, 200, 255, 0.5);
+
+`;
+
+
+
+export default function Sidebar({ sidebarOpen, toggleSidebar }) {
+
+  const navigate = useNavigate();
+
+  const menuItems = [
+
+    { path: '/', icon: '🏠', label: 'Dashboard' },
+
+    { path: '/projects', icon: '📁', label: 'Projects' },
+
+    { path: '/analytics', icon: '📊', label: 'Analytics' },
+
+    { path: '/reports', icon: '📈', label: 'Reports' },
+
+    { path: '/tasks', icon: '✅', label: 'Tasks' },
+
+    { path: '/calendar', icon: '📅', label: 'Calendar' },
+
+    { path: '/settings', icon: '⚙️', label: 'Settings' },
+
+    { path: '/profile', icon: '👤', label: 'Profile' },
+
+  ];
+
+
+
+  return (
+
+    <SidebarContainer sidebarOpen={sidebarOpen}>
+
+      <LogoSection sidebarOpen={sidebarOpen}>
+
+        <Logo sidebarOpen={sidebarOpen}>
+
+          <span>🌊</span>
+
+          {sidebarOpen && <span>OCEAN DEPTHS</span>}
+
+        </Logo>
+
+      </LogoSection>
+
+      
+
+      <ToggleButton onClick={toggleSidebar}>
+
+        {sidebarOpen ? '◀' : '▶'}
+
+      </ToggleButton>
+
+      
+
+      <NavMenu>
+
+        {menuItems.map((item) => (
+
+          <NavItem
+
+            key={item.path}
+
+            to={item.path}
+
+            sidebarOpen={sidebarOpen}
+
+            onClick={() => {
+
+              if (window.innerWidth <= 768) {
+
+                toggleSidebar();
+
+              }
+
+            }}
+
+          >
+
+            <NavIcon>{item.icon}</NavIcon>
+
+            <span>{item.label}</span>
+
+          </NavItem>
+
+        ))}
+
+      </NavMenu>
+
+      
+
+      <FooterSection>
+
+        <div>🔒 Secure</div>
+
+        <div>3000m Below Sea Level</div>
+
+      </FooterSection>
+
+    </SidebarContainer>
+
+  );
+
+} the folder in components is named ui which itself consite of four files 1 FloatingBubble and its code is import styled, { createGlobalStyle, keyframes, css } from 'styled-components';
+
+import { oceanTheme } from '../../theme/theme';
+
+
+
+
+
+const float = keyframes`
+
+  0%, 100% {
+
+    transform: translateY(0) scale(1);
+
+    opacity: 0;
+
+  }
+
+  10%, 90% {
+
+    opacity: 0.3; /* Set a static middle opacity or use the prop in the component below */
+
+  }
+
+  50% {
+
+    transform: translateY(-500px) scale(1.1); /* Increased to move up the screen */
+
+  }
+
+`;
+
+
+
+// Add 'css' to your imports at the top: 
+
+// import styled, { createGlobalStyle, keyframes, css } from 'styled-components';
+
+
+
+const FloatingBubble = styled.div`
+
+  position: absolute;
+
+  width: ${props => props.size || '40px'};
+
+  height: ${props => props.size || '40px'};
+
+  background: radial-gradient(
+
+    circle,
+
+    rgba(77, 166, 255, ${props => props.opacity || 0.3}) 0%,
+
+    rgba(12, 45, 100, 0) 70%
+
+  );
+
+  border-radius: 50%;
+
+  left: ${props => props.left || '50%'};
+
+  bottom: -100px;
+
+  
+
+  /* FIX IS HERE: Wrap the animation in the css helper */
+
+  animation: ${props => css`${props.animation} ${props.duration || '15s'} infinite`};
+
+  
+
+  animation-delay: ${props => props.delay || '0s'};
+
+  pointer-events: none;
+
+  z-index: -1;
+
+  box-shadow: 0 0 20px rgba(77, 166, 255, ${props => props.opacity || 0.3});
+
+`;  2nd file is GlassCard and its code is import styled from 'styled-components';
+
+import { oceanTheme } from '../../theme/theme';
+
+
+
+export const GlassCard = styled.div`
+
+  background: ${oceanTheme.glassmorphism.base.background};
+
+  backdrop-filter: ${oceanTheme.glassmorphism.base.backdropFilter};
+
+  -webkit-backdrop-filter: ${oceanTheme.glassmorphism.base.WebkitBackdropFilter};
+
+  border: ${oceanTheme.glassmorphism.base.border};
+
+  border-radius: ${oceanTheme.borders.radius.lg};
+
+  box-shadow: ${oceanTheme.glassmorphism.base.boxShadow};
+
+  padding: ${props => props.padding || oceanTheme.spacing.lg};
+
+  transition: all ${oceanTheme.animations.duration.normal} ${oceanTheme.animations.easing.ease};
+
+  
+
+  &:hover {
+
+    transform: ${props => props.hoverable ? 'translateY(-4px)' : 'none'};
+
+    box-shadow: 0 12px 40px rgba(0, 15, 45, 0.8),
+
+                0 0 30px rgba(77, 166, 255, 0.3);
+
+  }
+
+
+
+  ${props => props.fullWidth && 'width: 100%;'}
+
+  ${props => props.centered && 'margin: 0 auto;'}
+
+`; and the 3rd file name is OceanButton.jsx and its code is import styled from 'styled-components';
+
+import { oceanTheme } from '../../theme/theme';
+
+
+
+export const OceanButton = styled.button`
+
+  background: ${props => props.variant === 'primary' 
+
+    ? oceanTheme.colors.gradientAccent 
+
+    : props.variant === 'secondary'
+
+    ? 'transparent'
+
+    : oceanTheme.colors.seaBlue};
+
+  
+
+  ${props => props.variant === 'secondary' && `
+
+    border: 1px solid ${oceanTheme.colors.glassBorder};
+
+    background: rgba(25, 60, 120, 0.2);
+
+  `}
+
+  
+
+  color: ${props => props.variant === 'primary' ? 'white' : oceanTheme.colors.textPrimary};
+
+  border: none;
+
+  padding: ${props => props.size === 'sm' ? '0.75rem 1.5rem' : 
+
+             props.size === 'lg' ? '1rem 2rem' : '0.875rem 1.75rem'};
+
+  border-radius: ${oceanTheme.borders.radius.md};
+
+  font-weight: ${oceanTheme.typography.weights.semibold};
+
+  font-size: ${props => props.size === 'sm' ? '0.875rem' : '1rem'};
+
+  cursor: pointer;
+
+  transition: all ${oceanTheme.animations.duration.normal};
+
+  position: relative;
+
+  overflow: hidden;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: ${oceanTheme.spacing.xs};
+
+  
+
+  &:hover {
+
+    transform: translateY(-2px);
+
+    box-shadow: ${oceanTheme.shadows.xl}, ${oceanTheme.shadows.glow};
+
+    
+
+    ${props => props.variant === 'secondary' && `
+
+      background: rgba(77, 166, 255, 0.1);
+
+      border-color: ${oceanTheme.colors.cyan};
+
+    `}
+
+  }
+
+  
+
+  &:active {
+
+    transform: translateY(0);
+
+  }
+
+  
+
+  &:disabled {
+
+    opacity: 0.5;
+
+    cursor: not-allowed;
+
+    transform: none;
+
+  }
+
+  
+
+  /* Glowing effect on primary buttons */
+
+  ${props => props.variant === 'primary' && `
+
+    box-shadow: 0 4px 15px rgba(15, 60, 130, 0.5),
+
+                inset 0 2px 10px rgba(77, 166, 255, 0.3);
+
+    
+
+    &:before {
+
+      content: '';
+
+      position: absolute;
+
+      top: -50%;
+
+      left: -50%;
+
+      width: 200%;
+
+      height: 200%;
+
+      background: radial-gradient(
+
+        circle,
+
+        rgba(255, 255, 255, 0.15) 0%,
+
+        rgba(255, 255, 255, 0) 70%
+
+      );
+
+      transform: scale(0.8);
+
+      transition: transform ${oceanTheme.animations.duration.normal};
+
+    }
+
+    
+
+    &:hover:before {
+
+      transform: scale(1.2);
+
+    }
+
+  `}
+
+`;  and 4th one name is WaveDivider and its code is import styled from 'styled-components';
+
+import { oceanTheme } from '../../theme/theme';
+
+
+
+export const WaveDivider = styled.div`
+
+  height: ${props => props.height || '8px'};
+
+  background: linear-gradient(
+
+    to right,
+
+    transparent,
+
+    ${oceanTheme.colors.aqua},
+
+    ${oceanTheme.colors.cyan},
+
+    ${oceanTheme.colors.aqua},
+
+    transparent
+
+  );
+
+  border-radius: ${oceanTheme.borders.radius.sm};
+
+  margin: ${props => props.margin || `${oceanTheme.spacing.md} 0`};
+
+  position: relative;
+
+  box-shadow: 0 2px 10px rgba(42, 117, 184, 0.4);
+
+  
+
+  &::before,
+
+  &::after {
+
+    content: '';
+
+    position: absolute;
+
+    width: 12px;
+
+    height: 12px;
+
+    background: ${oceanTheme.colors.cyan};
+
+    border-radius: 50%;
+
+    box-shadow: 0 0 12px ${oceanTheme.colors.cyan};
+
+    animation: ripple 3s infinite;
+
+  }
+
+  
+
+  &::before {
+
+    top: -6px;
+
+    left: 20%;
+
+  }
+
+  
+
+  &::after {
+
+    top: -8px;
+
+    right: 15%;
+
+    animation-direction: reverse;
+
+  }
+
+  
+
+  @keyframes ripple {
+
+    0%, 100% { transform: scale(0.8); opacity: 0.3; }
+
+    50% { transform: scale(1.2); opacity: 1; }
+
+  }
+
+`; with these our 3rd folder is completed my 4th folder name is context which is empty 5 folder name is hooks 6 folder name is layouts in which for now there is only one file MainLayouts.jsx and its code is import React, { useState, useEffect } from 'react';
+
+import { Outlet, useNavigate, useLocation } from 'react-router-dom';
+
+import Navbar from '../components/navbar.jsx';
+
+import Sidebar from '../components/Sidebar.jsx';
+
+// FIX 1: Added 'css' to the import list
+
+import styled, { createGlobalStyle, keyframes, css } from 'styled-components';
+
+
+
+const GlobalStyles = createGlobalStyle`
+
+  /* Note: Move the @import to your index.html <head> to fully remove the warning */
+
+  
+
+  * {
+
+    margin: 0;
+
+    padding: 0;
+
+    box-sizing: border-box;
+
+  }
+
+
+
+  html, body {
+
+    height: 100%;
+
+    width: 100%;
+
+    overflow-x: hidden;
+
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+
+    background: linear-gradient(165deg, #0a0e17 0%, #0c1a3a 45%, #122a5e 75%, #0d1b36 100%);
+
+    color: #e6f0ff;
+
+    -webkit-font-smoothing: antialiased;
+
+    -moz-osx-font-smoothing: grayscale;
+
+  }
+
+
+
+  body {
+
+    position: relative;
+
+    overflow-y: auto;
+
+  }
+
+
+
+  /* Starry Background */
+
+  body::before {
+
+    content: '';
+
+    position: fixed;
+
+    top: 0;
+
+    left: 0;
+
+    width: 100%;
+
+    height: 100%;
+
+    pointer-events: none;
+
+    z-index: -2;
+
+    background-image: 
+
+      radial-gradient(white 1px, transparent 1px),
+
+      radial-gradient(rgba(255, 255, 255, 0.6) 1px, transparent 1px),
+
+      radial-gradient(rgba(255, 255, 255, 0.3) 1px, transparent 1px);
+
+    background-size: 50px 50px, 30px 30px, 20px 20px;
+
+    background-position: 0 0, 15px 15px, 5px 5px;
+
+    opacity: 0.3;
+
+  }
+
+
+
+  /* Depth Lines for Ocean Effect */
+
+  body::after {
+
+    content: '';
+
+    position: fixed;
+
+    top: 0;
+
+    left: 0;
+
+    width: 100%;
+
+    height: 100%;
+
+    pointer-events: none;
+
+    z-index: -1;
+
+    background: repeating-linear-gradient(
+
+      180deg,
+
+      transparent,
+
+      transparent 2px,
+
+      rgba(15, 35, 80, 0.1) 2px,
+
+      rgba(15, 35, 80, 0.1) 4px
+
+    );
+
+    opacity: 0.2;
+
+  }
+
+
+
+  ::-webkit-scrollbar { width: 10px; }
+
+  ::-webkit-scrollbar-track { background: rgba(15, 35, 80, 0.3); border-radius: 10px; }
+
+  ::-webkit-scrollbar-thumb { background: #4da6ff; border-radius: 10px; border: 2px solid rgba(15, 35, 80, 0.3); }
+
+`;
+
+
+
+const LayoutContainer = styled.div`
+
+  display: flex;
+
+  min-height: 100vh;
+
+  position: relative;
+
+  overflow: hidden;
+
+`;
+
+
+
+const MainContent = styled.main`
+
+  flex: 1;
+
+  padding: 2rem;
+
+  transition: all 0.3s ease;
+
+  margin-left: ${props => props.sidebarOpen ? '280px' : '80px'};
+
+  
+
+  @media (max-width: 768px) {
+
+    margin-left: 0;
+
+    padding: 1.5rem;
+
+  }
+
+`;
+
+
+
+const float = keyframes`
+
+  0%, 100% { transform: translateY(0) scale(1); opacity: 0; }
+
+  10%, 90% { opacity: 0.3; }
+
+  50% { transform: translateY(-100px) scale(1.1); }
+
+`;
+
+
+
+const FloatingBubble = styled.div`
+
+  position: absolute;
+
+  width: ${props => props.size || '40px'};
+
+  height: ${props => props.size || '40px'};
+
+  background: radial-gradient(
+
+    circle,
+
+    rgba(77, 166, 255, ${props => props.opacity || 0.3}) 0%,
+
+    rgba(12, 45, 100, 0) 70%
+
+  );
+
+  border-radius: 50%;
+
+  left: ${props => props.left || '50%'};
+
+  bottom: -100px;
+
+  
+
+  /* FIX 2: Wrapped the animation string in the css tag */
+
+  animation: ${props => css`${props.animation} ${props.duration || '15s'} infinite`};
+
+  
+
+  animation-delay: ${props => props.delay || '0s'};
+
+  pointer-events: none;
+
+  z-index: -1;
+
+  box-shadow: 0 0 20px rgba(77, 166, 255, ${props => props.opacity || 0.3});
+
+`;
+
+
+
+export default function MainLayout() {
+
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+
+  const navigate = useNavigate();
+
+  const location = useLocation();
+
+
+
+  useEffect(() => {
+
+    const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+
+    if (!isLoggedIn && location.pathname !== '/login' && location.pathname !== '/register') {
+
+      navigate('/login');
+
+    }
+
+  }, [navigate, location]);
+
+
+
+  return (
+
+    <>
+
+      <GlobalStyles />
+
+      <LayoutContainer>
+
+        {[...Array(15)].map((_, i) => (
+
+          <FloatingBubble
+
+            key={i}
+
+            size={`${Math.random() * 80 + 20}px`}
+
+            left={`${Math.random() * 100}%`}
+
+            opacity={Math.random() * 0.4 + 0.1}
+
+            duration={`${Math.random() * 15 + 10}s`}
+
+            delay={`${Math.random() * 5}s`}
+
+            animation={float}
+
+          />
+
+        ))}
+
+        
+
+        <Sidebar 
+
+          sidebarOpen={sidebarOpen} 
+
+          toggleSidebar={() => setSidebarOpen(!sidebarOpen)}
+
+        />
+
+        <Navbar />
+
+        <MainContent sidebarOpen={sidebarOpen}>
+
+          <Outlet />
+
+        </MainContent>
+
+      </LayoutContainer>
+
+    </>
+
+  );
+
+}  with these there are our 6 folder now only 4 folder remain our 7th folder name is pages 

@@ -1,0 +1,26 @@
+
+@import "tailwindcss";
+
+@theme {
+  --animate-float: float 20s infinite ease-in-out;
+  --animate-shake: shake 0.5s cubic-bezier(.36, .07, .19, .97) both;
+}
+
+/* ... (the rest of the keyframes I gave you earlier) */
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+}
