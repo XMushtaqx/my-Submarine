@@ -18,18 +18,15 @@ const app = express();
 
 
 // 3. Middleware Configuration
+
+// ... existing imports ...
 app.use(cors({
-  origin: function (origin, callback) {
-    // Allow any Vercel deployment or local testing
-    if (!origin || origin.includes(".vercel.app") || origin.includes("localhost")) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true
+  origin: true, 
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
 }));
+app.use(express.json());
+
 
 
 // 4. Route Definitions 
