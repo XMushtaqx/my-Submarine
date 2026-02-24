@@ -16,14 +16,21 @@ connectDB();
 
 const app = express();
 
+
 // 3. Middleware Configuration
 app.use(cors({
-  // Replace the first URL with your actual live Frontend URL from Vercel
-  origin: ["https://my-submarine-frontend.vercel.app", "http://localhost:5173"], 
+  origin: function (origin, callback) {
+    // Allow any Vercel deployment or local testing
+    if (!origin || origin.includes(".vercel.app") || origin.includes("localhost")) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
-})); 
-app.use(express.json()); 
+}));
+
 
 // 4. Route Definitions 
 app.use('/api/v1/auth', authRoutes);
