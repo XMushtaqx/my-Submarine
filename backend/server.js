@@ -17,21 +17,25 @@ connectDB();
 const app = express();
 
 // 3. Middleware Configuration
-app.use(cors()); 
+app.use(cors({
+  // Replace the first URL with your actual live Frontend URL from Vercel
+  origin: ["https://my-submarine-frontend.vercel.app", "http://localhost:5173"], 
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
+})); 
 app.use(express.json()); 
 
 // 4. Route Definitions 
-// --- VERSION 1 API CLUSTER ---
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/jobs', jobRoutes);
-app.use('/api/v1/user', userRoutes); // Fixed: Added /v1 to match your frontend api.js
+app.use('/api/v1/user', userRoutes); 
 
-// 5. Basic "Ping" Route for health checks
+// 5. Basic "Ping" Route
 app.get('/', (req, res) => {
   res.send('SUBMARINE SERVER IS ONLINE // READY FOR COMMANDS');
 });
 
-// 6. Global Error Handler (Optional but helpful for debugging)
+// 6. Global Error Handler
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ success: false, message: 'Internal Server Error' });
@@ -42,5 +46,4 @@ const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
   console.log(`📡 SERVER TRANSMITTING ON PORT ${PORT}`);
-  console.log(`🔗 API ENDPOINT: http://localhost:${PORT}/api/v1`);
 });
